@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class SetWarpUtils {
@@ -85,6 +87,26 @@ public class SetWarpUtils {
         }
     }
 
+    public static List<String> listWarpsAutocomplete(Player player) {
+
+        YamlConfiguration data = YamlConfiguration.loadConfiguration(getPlayerWarpsFile(player));
+
+        if (data.getConfigurationSection("data") != null) {
+            Set<String> warps = data.getConfigurationSection("data").getKeys(false);
+            warps.remove("account");
+            
+            List<String> warpsList = new ArrayList<>(warps);
+            if (!warpsList.isEmpty()) {
+                return warpsList;
+            } else {
+                player.sendMessage(FormattedStrings.CHAT_ERROR_PREFIX() + FormattedStrings.CREATE_WARP_HELP());
+            }
+        } else {
+            player.sendMessage(FormattedStrings.CHAT_ERROR_PREFIX() + FormattedStrings.NO_WARPS_ERROR());
+        }
+        return null;
+    }
+    
     public static void listPWarps(Player player) {
 
         YamlConfiguration data = YamlConfiguration.loadConfiguration(getPlayerWarpsFile(player));
